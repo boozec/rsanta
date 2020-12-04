@@ -91,13 +91,18 @@ fn main() {
         .credentials(creds)
         .build();
 
-    for (email, name) in members.into_iter() {
+    for (email, name) in members.iter() {
         loop {
             match my_gift_to(&mut emails) {
-                Some(gift_to) => {
-                    if gift_to.to_string() != email.to_string()
-                        && !done.iter().any(|v| v == gift_to)
+                Some(gift_to_email) => {
+                    if gift_to_email.to_string() != email.to_string()
+                        && !done.iter().any(|v| v == gift_to_email)
                     {
+                        let gift_to_name;
+                        match members.get(&gift_to_email[..]) {
+                            Some(v) => gift_to_name = v,
+                            None => continue
+                        }
                         let mail = Message::builder()
                             .from(
                                 format!("{} <{}>", config_name, config_email)
@@ -106,13 +111,13 @@ fn main() {
                             )
                             .to(format!("{} <{}>", name, email).parse().unwrap())
                             .subject("Secret Santa!")
-                            .body(format!("You're the Secret Santa of:\n{}", name))
+                            .body(format!("You're the Secret Santa of:\n{}", gift_to_name))
                             .unwrap();
                         match mailer.send(&mail) {
                             Ok(_) => println!("Email sent successfully to {}!", email),
                             Err(e) => panic!("Could not send email: {:?}", e),
                         }
-                        done.push(gift_to.to_string());
+                        done.push(gift_to_email.to_string());
                         break;
                     }
                 }

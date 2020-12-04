@@ -38,9 +38,17 @@ fn main() {
         .expect("Error occurs reading this file")
         .to_string();
 
+    let config_name;
     let config_email;
     let config_password;
     let host;
+    match env::var("NAME") {
+        Ok(v) => config_name = v.to_string(),
+        Err(_) => {
+            dbg!("Use default name!");
+            config_name = "Santa Claus".to_string();
+        }
+    }
     match env::var("EMAIL") {
         Ok(v) => config_email = v.to_string(),
         Err(e) => panic!("Must provide EMAIL: {}", e),
@@ -76,7 +84,7 @@ fn main() {
         emails.push(email.to_string());
     }
 
-    let creds = Credentials::new(config_email, config_password);
+    let creds = Credentials::new(config_email.to_string(), config_password);
 
     let mailer = SmtpTransport::relay(&host)
         .unwrap()
@@ -91,7 +99,11 @@ fn main() {
                         && !done.iter().any(|v| v == gift_to)
                     {
                         let mail = Message::builder()
-                            .from("Santo Cariotti <santo@dcariotti.me>".parse().unwrap())
+                            .from(
+                                format!("{} <{}>", config_name, config_email)
+                                    .parse()
+                                    .unwrap(),
+                            )
                             .to(format!("{} <{}>", name, email).parse().unwrap())
                             .subject("Secret Santa!")
                             .body(format!("You're the Secret Santa of:\n{}", name))

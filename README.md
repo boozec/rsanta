@@ -1,7 +1,8 @@
-# rsanta - make your Secret Santa
+# rsanta - Make secret santa with your friends
 
 You must set environments variables for smtp:
 ```
+export NAME=nameofemail
 export EMAIL=youremail@tld.com
 export PASSWORD=passsword
 export HOST=smtp_host

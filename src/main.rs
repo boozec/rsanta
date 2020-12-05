@@ -20,7 +20,7 @@ fn main() {
     let matches = App::new("rsanta")
         .version("0.1.0")
         .author("Santo Cariotti <santo@dcariotti.me>")
-        .about("Make secret santa with your friends")
+        .about("Be your friends' Secret Santa")
         .arg(
             Arg::with_name("file")
                 .short("f")
@@ -111,7 +111,7 @@ fn main() {
                             )
                             .to(format!("{} <{}>", name, email).parse().unwrap())
                             .subject("Secret Santa!")
-                            .body(format!("You're the Secret Santa of:\n{}", gift_to_name))
+                            .body(format!("You are the Secret Santa of:\n{}", gift_to_name))
                             .unwrap();
                         match mailer.send(&mail) {
                             Ok(_) => println!("Email sent successfully to {}!", email),

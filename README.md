@@ -1,4 +1,4 @@
-# rsanta - Make secret santa with your friends
+# rsanta - Be your friends' Secret Santa
 
 You must set environments variables for smtp:
 ```

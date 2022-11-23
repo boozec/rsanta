@@ -8,6 +8,7 @@ use rand::prelude::*;
 use std::collections::HashMap;
 use std::env;
 use std::fs;
+use std::{thread, time};
 
 fn my_gift_to(players: &mut Vec<String>) -> Option<&String> {
     let mut rng = rand::thread_rng();
@@ -91,6 +92,11 @@ fn main() {
         .credentials(creds)
         .build();
 
+    let three_secs = time::Duration::from_secs(3);
+
+    let n = members.len();
+    let mut i = 1;
+
     for (email, name) in members.iter() {
         loop {
             match my_gift_to(&mut emails) {
@@ -101,7 +107,7 @@ fn main() {
                         let gift_to_name;
                         match members.get(&gift_to_email[..]) {
                             Some(v) => gift_to_name = v,
-                            None => continue
+                            None => continue,
                         }
                         let mail = Message::builder()
                             .from(
@@ -114,9 +120,15 @@ fn main() {
                             .body(format!("You are the Secret Santa of:\n{}", gift_to_name))
                             .unwrap();
                         match mailer.send(&mail) {
-                            Ok(_) => println!("Email sent successfully to {}!", email),
+                            Ok(_) => {
+                                println!("[{}/{}] Email sent successfully to {}!", i, n, email)
+                            }
                             Err(e) => panic!("Could not send email: {:?}", e),
                         }
+
+                        i += 1;
+
+                        thread::sleep(three_secs);
                         done.push(gift_to_email.to_string());
                         break;
                     }

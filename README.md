@@ -1,5 +1,4 @@
-This is a shitty code. Maybe I'll fix that for the next xmas.
-
+💩 This is a shitty code. Maybe I'll fix that for the next xmas.
 ======
 
 # rsanta - Be your friends' Secret Santa
